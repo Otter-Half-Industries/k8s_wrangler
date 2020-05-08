@@ -6,4 +6,4 @@ class TestK8sWrangler:
         self.kw = KubernetesWrangler()
 
     def test_get_deployments(self):
-        assert self.kw.get_deployments() == {}
+        assert self.kw.get_deployments() == {"test-pod": 1.0}
