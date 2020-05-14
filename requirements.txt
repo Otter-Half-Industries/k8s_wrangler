@@ -9,7 +9,10 @@ idna==2.9
 importlib-metadata==1.6.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
+# k8s v1.14.0
 kubernetes==11.0.0
+# k8s v1.16.0+ compatibility
+#git+https://github.com/kubernetes-client/python.git
 MarkupSafe==1.1.1
 more-itertools==8.2.0
 oauthlib==3.1.0

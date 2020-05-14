@@ -1,21 +1,32 @@
+---
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: k8s-wrangler-service
-spec:
-  selector:
-    app: k8s-wrangler
-  ports:
-  - protocol: "TCP"
-    port: 5000
-    targetPort: 5000
-  type: LoadBalancer
+  name: chipy
+  labels:
+    name: chipy
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: k8s-wrangler-service
+#   namespace: chipy
+# spec:
+#   selector:
+#     app: k8s-wrangler
+#   ports:
+#   - protocol: "TCP"
+#     port: 5000
+#     targetPort: 5000
+#   type: LoadBalancer
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8s-wrangler
+  namespace: chipy
 spec:
   selector:
     matchLabels:
@@ -28,7 +39,7 @@ spec:
     spec:
       containers:
       - name: k8s-wrangler
-        image: k8s-wrangler:1.0.0
+        image: k8s-wrangler:1.14.0
         imagePullPolicy: Never
         ports:
         - containerPort: 5000

@@ -9,9 +9,9 @@ Note that this project has only been tested on MacOS Catalina v10.15.4 with VMWa
 - [ ] Minikube v1.9.2 [installed](https://kubernetes.io/docs/tasks/tools/install-minikube/) and configured
 - [ ] A Minikube [driver](https://minikube.sigs.k8s.io/docs/drivers/) installed and configured - VMWare was used to test, and as of May 14, 2020 is available for a 30 day free trial before a paid subscription
 - [ ] Kubernetes v1.14.0:
-`minikube start --kubernetes-version v1.14.0`
-- [ ] Kubernetes v1.15.0:
-`minikube start --kubernetes-version v1.15.0`
+`minikube start -p k8s-v1.14.0 --kubernetes-version v1.14.0`
+- [ ] Kubernetes v1.16.0:
+`minikube start -p k8s-v1.16.0 --kubernetes-version v1.16.0`
 
 ## Installation
 
@@ -52,11 +52,20 @@ Scenario 2: Run Kubernetes Wrangler in a Docker Container
 
 1. Locally navigate to `k8s_wrangler/`
 2. Build and tag the docker container:
+
+### k8s v1.14.0
 ```bash
-docker build -t k8s-wrangler:1.0 .
+eval $(minikube -p k8s-v1.14.0 docker-env)
+docker build -t k8s-wrangler:1.14.0 .
 ```
+### k8s v1.16.0
+```bash
+eval $(minikube -p k8s-v1.16.0 docker-env)
+docker build -t k8s-wrangler:1.16.0 .
+```
+
 3. Run the Docker container to start the Kubernetes Wrangler server:
 ```bash
-docker run k8s-wrangler:1.0
+docker run k8s-wrangler:1.14.0
 ```
 4. In a browser, try the endpoints at `0.0.0.0:5000/deployments` and `0.0.0.0:5000/pods`
