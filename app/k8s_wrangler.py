@@ -1,32 +1,68 @@
+import traceback
 from kubernetes import client, config
 
-class KubernetesWrangler:
+class K8sWrangler:
     def __init__(self):
-        self.deployments = {}
+      try:
+        self.config = config.load_kube_config()
 
-    def connect(self):
-        config.load_kube_config()
-        v1 = client.CoreV1Api()
-        return v1
+      except Exception:
+        print("local config not found attempting incluster config", flush=True)
 
-    def get_pods(self, namespace="default"):
+        # if we can't find local kube_config, try the incluster_config
         try:
-          pods = {}
-          conn = self.connect()
-          ret = conn.list_namespaced_pod(namespace, timeout_seconds=90, limit=25)
+          self.config = config.load_incluster_config()
+        except Exception:
+          print(f"Error: {traceback.format_exc()}")
+
+      self.core_v1_api = client.CoreV1Api()
+
+      # k8s 1.14.0
+      self.extensions_v1_beta1_api = client.ExtensionsV1beta1Api()
+
+      # k8s 1.16.0+
+      #self.apps_v1_api = client.AppsV1Api()
+
+    def get_pods(self, namespace="chipy"):
+        pod_versions = {}
+
+        try:
+          ret = self.core_v1_api.list_namespaced_pod(namespace, timeout_seconds=30)
+
           for item in ret.items:
             container_vals = item.spec.containers[0].image.split(':')
-            container_name = container_vals[0].split('/')[1]
-            container_version = container_vals[1].strip("'")
-            pods[container_name] = container_version
-          return pods
+            container_name = container_vals[0]
+            container_version = container_vals[1]
+            pod_versions[container_name] = container_version
+
         except Exception as e:
-          print({'Error': e})
+          print(f"Error: {traceback.format_exc()}")
 
-    def get_deployments(self):
-        # conn = self.connect()
-        return self.deployments
+        return pod_versions
 
+    def get_deployments(self, namespace="chipy"):
+        deployment_versions = {}
+
+        try:
+          # k8s 1.14.0
+          ret = self.extensions_v1_beta1_api.list_namespaced_deployment(namespace, timeout_seconds=30)
+
+          # k8s 1.16.0+
+          #ret = self.apps_v1_api.list_namespaced_deployment(namespace, timeout_seconds=30)
+
+          for item in ret.items:
+            container_vals = item.spec.template.spec.containers[0].image.split(':')
+            container_name = container_vals[0]
+            container_version = container_vals[1]
+            deployment_versions[container_name] = container_version
+
+        except Exception as e:
+          print(f"Error: {traceback.format_exc()}")
+
+        return deployment_versions
+
+# useful for local debugging
 if __name__ == "__main__":
-  kw = KubernetesWrangler()
-  kw.get_pods()
+  kw = K8sWrangler()
+  print(kw.get_pods())
+  print(kw.get_deployments())
