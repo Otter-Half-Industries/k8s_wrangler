@@ -52,16 +52,8 @@ Scenario 2: Run Kubernetes Wrangler in a Docker Container
 
 1. Locally navigate to `k8s_wrangler/`
 2. Build and tag the docker container:
-
-### k8s v1.14.0
 ```bash
-eval $(minikube -p k8s-v1.14.0 docker-env)
 docker build -t k8s-wrangler:1.14.0 .
-```
-### k8s v1.16.0
-```bash
-eval $(minikube -p k8s-v1.16.0 docker-env)
-docker build -t k8s-wrangler:1.16.0 .
 ```
 
 3. Run the Docker container to start the Kubernetes Wrangler server:
@@ -69,3 +61,40 @@ docker build -t k8s-wrangler:1.16.0 .
 docker run k8s-wrangler:1.14.0
 ```
 4. In a browser, try the endpoints at `0.0.0.0:5000/deployments` and `0.0.0.0:5000/pods`
+
+## Building the docker image for k8s clusters
+
+### k8s v1.14.0
+```bash
+kubectl config use-context k8s-v1.14.0
+eval $(minikube -p k8s-v1.14.0 docker-env)
+docker build -t k8s-wrangler:1.14.0 .
+```
+
+### k8s v1.16.0
+```bash
+kubectl config use-context k8s-v1.16.0
+eval $(minikube -p k8s-v1.16.0 docker-env)
+docker build -t k8s-wrangler:1.16.0 .
+```
+
+## deploying the apps to k8s
+```bash
+kubectl apply -f deployment_rbac.yml
+```
+
+Exposing and connecting the application:
+
+### k8s v1.14.0
+```bash
+kubectl config use-context k8s-v1.14.0
+kubectl expose deployment -n chipy k8s-wrangler --type=LoadBalancer --port=5000
+minikube service -p k8s-v1.14.0 -n chipy k8s-wrangler
+```
+
+### k8s v1.16.0
+```bash
+kubectl config use-context k8s-v1.16.0
+kubectl expose deployment -n chipy k8s-wrangler --type=LoadBalancer --port=5000
+minikube service -p k8s-v1.16.0 -n chipy k8s-wrangler
+```
