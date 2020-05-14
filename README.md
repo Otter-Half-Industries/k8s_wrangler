@@ -38,7 +38,7 @@ Scenario 1: Run Kubernetes Wrangler locally.
 1. Locally navigate to `k8s_wrangler/app`.
 2. Using `virtualenv` create a virtual environment, activate it, and install dependencies:
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```

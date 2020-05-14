@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: k8s-wrangler
-        image: k8s-wrangler:latest
+        image: k8s-wrangler:1.0.0
         imagePullPolicy: Never
         ports:
         - containerPort: 5000

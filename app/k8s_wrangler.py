@@ -1,6 +1,6 @@
 from kubernetes import client, config
 
-class KubernetesWrangler:
+class K8sWrangler:
     def __init__(self):
         self.deployments = {}
 
@@ -28,5 +28,5 @@ class KubernetesWrangler:
         return self.deployments
 
 if __name__ == "__main__":
-  kw = KubernetesWrangler()
+  kw = K8sWrangler()
   kw.get_pods()
