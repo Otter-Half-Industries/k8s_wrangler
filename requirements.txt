@@ -8,7 +8,7 @@ google-auth==1.14.2
 idna==2.9
 importlib-metadata==1.6.0
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 # k8s v1.14.0
 kubernetes==11.0.0
 # k8s v1.16.0+ compatibility
